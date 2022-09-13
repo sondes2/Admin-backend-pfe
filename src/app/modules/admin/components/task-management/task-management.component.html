@@ -1,0 +1,213 @@
+<div class="container-fluid">
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Task Management</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <button class="btn btn-outline-success" data-toggle="modal" data-target="#addTask"
+                (click)="init()"
+                type="button">
+          Add Task
+        </button>
+      </div>
+    </div>
+
+  </nav>
+
+
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th scope="col">Id</th>
+      <th scope="col">Description</th>
+      <th scope="col">Status</th>
+      <th scope="col">Story point</th>
+      <th scope="col">Start Date</th>
+      <th scope="col">end Date</th>
+      <th scope="col">TimeSpent</th>
+      <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let task of taskList">
+      <td>{{task.idTask}}</td>
+      <td>{{task.description}}</td>
+      <td>{{task.statustype}}</td>
+      <td>{{task.storypoint}}</td>
+      <td>{{task.startDate}}</td>
+      <td>{{task.endDate}}</td>
+      <td>{{task.timeSpent}}</td>
+      <td>
+
+        <button type="button" class="btn btn-outline-warning me-2" data-toggle="modal"
+                data-target="#affect" (click)="affect(task.idTask)" *ngIf="!task.user">Affect
+        </button>
+        <button type="button" class="btn btn-outline-success me-2" data-toggle="modal"
+                data-target="#affect" (click)="affect(task.idTask)" *ngIf="task.user">{{task.user.login}}
+        </button>
+
+        <button type="button" class="btn btn-outline-primary me-2" data-toggle="modal"
+                data-target="#editTask" (click)="editTask(task.idTask)">Edit Task
+        </button>
+
+
+        <button type="button" class="btn btn-outline-danger" (click)="delete(task.idTask)">Delete</button>
+      </td>
+
+
+    </tr>
+
+    </tbody>
+  </table>
+
+
+  <!-- Add Task modal -->
+  <div class="modal fade" id="addTask" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" >Add new Task</h5>
+        </div>
+        <div class="modal-body">
+
+          <form [formGroup]="taskDetails">
+            <div class="mb-3">
+              <label class="form-label">Description </label>
+              <input type="text" formControlName="description" class="form-control" id="description"
+                     aria-describedby="emailHelp">
+            </div>
+
+            <div ngbDropdown class="d-inline-block">
+              <button type="button" class="btn btn-outline-primary" id="dropdownBasic"
+                      ngbDropdownToggle>{{status}}</button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button (click)="selectStatus('TODO')" ngbDropdownItem>
+                  TODO
+                </button>
+                <button (click)="selectStatus('DONE')" ngbDropdownItem>
+                  DONE
+                </button>
+                <button (click)="selectStatus('DOING')" ngbDropdownItem>
+                  DOING
+                </button>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">storypoint </label>
+              <input type="text" formControlName="storypoint" class="form-control" id="storypoint"
+                     aria-describedby="emailHelp">
+            </div>
+            <div class="modal-footer">
+
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="addTask()"
+                      style="position: relative;
+                                left: -48px; font-size: 21px;">Add task
+              </button>
+            </div>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Edit Task modal -->
+  <div class="modal fade" id="editTask" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Task details</h5>
+
+        </div>
+        <div class="modal-body">
+
+          <form [formGroup]="taskDetails">
+            <div class="mb-3">
+              <label class="form-label">Description </label>
+              <input type="text" formControlName="description" class="form-control" id="description"
+                     aria-describedby="emailHelp">
+            </div>
+
+            <div ngbDropdown class="d-inline-block">
+              <button type="button" class="btn btn-outline-primary" id="dropdownBasic"
+                      ngbDropdownToggle>{{status}}</button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button (click)="selectStatus('TODO')" ngbDropdownItem>
+                  TODO
+                </button>
+                <button (click)="selectStatus('DONE')" ngbDropdownItem>
+                  DONE
+                </button>
+                <button (click)="selectStatus('DOING')" ngbDropdownItem>
+                  DOING
+                </button>
+              </div>
+            </div>
+
+            <input type="text" formControlName="storypoint" class="form-control" id="storypoint" placeholder="storypoint">
+
+            <div class="modal-footer">
+
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="updateTask()"
+                      style="position: relative;
+                                left: -48px; font-size: 21px;">Edit task
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- affect -->
+  <div class="modal fade" id="affect" role="dialog" tabindex="-1" aria-labelledby="exampleModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Affect Users</h5>
+        </div>
+        <div class="modal-body">
+
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let user of allUsers; let i = index">
+              <td>{{user.lastName}} {{user.firstName}}</td>
+              <td>
+
+                <button type="button" class="btn btn-outline-primary me-2" data-toggle="modal"
+                        data-target="#editUser" (click)="affectUser(user)"
+                        style="margin-left: -60px;">Affect</button>
+
+
+                <button type="button" class="btn btn-outline-danger" (click)="editTask(user)">Delete</button>
+              </td>
+
+
+            </tr>
+
+            </tbody>
+          </table>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
